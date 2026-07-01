@@ -1,0 +1,540 @@
+:root {
+  --ink: #050505;
+  --muted: #8a8a8a;
+  --paper: #ffffff;
+  --accent: #9e6e5d;
+  --hover-orange: #f28a2e;
+  --blue: #233b45;
+  --display-font: Georgia, 'Times New Roman', serif;
+  --header-height: 64px;
+  --header-padding-left: clamp(28px, 4vw, 72px);
+  --header-padding-right: clamp(56px, 7vw, 124px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-shell {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.design-frame {
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header {
+  height: var(--header-height);
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--header-padding-right) 0 var(--header-padding-left);
+  position: relative;
+  z-index: 5;
+}
+
+h1,
+.role {
+  font-family: var(--display-font);
+  font-weight: 900;
+  text-rendering: geometricPrecision;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.brand-logo {
+  display: block;
+  width: clamp(135px, 11.25vw, 198px);
+  height: auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(28px, 5vw, 88px);
+  font-size: clamp(12px, 0.9vw, 16px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.nav-links a {
+  position: relative;
+  padding: 10px 0;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.hero-section {
+  --hero-content-left: clamp(120px, 8.8vw, 800px);
+  --axis-left: clamp(60px, 7.6vw, 126px);
+  --axis-width: 6px;
+  --timeline-date-width: 124px;
+  --timeline-detail-padding: 24px;
+  /* 主副标题和经历文字左对齐：由时间列宽度 + 经历文字左边距自动计算 */
+  --hero-title-offset: calc(var(--timeline-date-width) + var(--timeline-detail-padding));
+  --hero-content-top: clamp(56px, 7vw, 112px);
+  /* 主副标题上移距离：数值越大，MURMUR 和 designer 那行越往上 */
+  --hero-title-lift: clamp(48px, 1.6vw, 76px);
+  /* 粗时间轴和主副标题顶部对齐：会跟随主副标题上移距离自动调整 */
+  --axis-top: calc(var(--hero-content-top) - var(--hero-title-lift));
+  /* 粗时间轴长度：和 MURMUR + designer 这组主副标题的高度保持接近 */
+  --axis-thick-height: clamp(108px, 8.8vw, 124px);
+  /* 经历列表整体上移距离：数值越大，经历越靠上 */
+  --timeline-lift: 36px;
+  /* 每一段经历之间的间距：数值越大，每段之间越松 */
+  --timeline-gap: 26px;
+  /* 时间轴横线粗细：数值越小，横线越细 */
+  --timeline-line-height: 2px;
+  /* 时间轴端头圆点大小：数值越小，圆点越小 */
+  --timeline-dot-size: 14px;
+  --timeline-marker-center: 20px;
+  /* 悬停经历时整体右移距离：数值越大，block 越往右，横线越长 */
+  --timeline-hover-shift: 18px;
+  --timeline-line-left: calc(var(--axis-left) + var(--axis-width) - var(--hero-content-left));
+  min-height: calc(100vh - var(--header-height));
+  display: grid;
+  grid-template-columns: minmax(560px, 0.98fr) minmax(470px, 1.02fr);
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  position: relative;
+}
+
+.hero-content {
+  padding: var(--hero-content-top) 0 clamp(40px, 5vw, 80px) var(--hero-content-left);
+  position: relative;
+  z-index: 2;
+}
+
+.axis {
+  position: absolute;
+  left: var(--axis-left);
+  top: var(--axis-top);
+  bottom: 0;
+  width: var(--axis-width);
+  background: #000;
+}
+
+.axis::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 0;
+  width: 30px;
+  height: var(--axis-thick-height);
+  background: #000;
+}
+
+/* 主标题 MURMUR 字号：修改下面的 font-size */
+h1 {
+  margin: 0 0 0 var(--hero-title-offset);
+  font-size: clamp(30px, 5.2vw, 58px);
+  line-height: 0.95;
+  position: relative;
+  top: calc(-1 * var(--hero-title-lift));
+}
+
+/* 副标题 designer / researcher / ... 字号：修改下面的 font-size */
+.role {
+  margin: 30px 0 58px var(--hero-title-offset);
+  font-size: clamp(15px, 1.6vw, 25px);
+  line-height: 1.1;
+  white-space: nowrap;
+  position: relative;
+  top: calc(-1 * var(--hero-title-lift));
+}
+
+.timeline {
+  width: min(980px, calc(100vw - var(--hero-content-left) - 32px));
+  display: grid;
+  gap: var(--timeline-gap);
+  margin-top: calc(-1 * var(--timeline-lift));
+}
+
+.timeline-item {
+  --timeline-item-shift: 0px;
+  display: grid;
+  grid-template-columns: var(--timeline-date-width) minmax(0, 1fr);
+  align-items: start;
+  position: relative;
+  outline: none;
+  cursor: default;
+}
+
+.timeline-item:hover,
+.timeline-item:focus-visible {
+  --timeline-item-shift: var(--timeline-hover-shift);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: var(--timeline-line-left);
+  top: calc(var(--timeline-marker-center) - (var(--timeline-line-height) / 2));
+  width: calc(var(--timeline-date-width) - var(--timeline-line-left) + var(--timeline-item-shift));
+  height: var(--timeline-line-height);
+  background: #000;
+  transition: width 180ms ease;
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--timeline-date-width) + var(--timeline-item-shift) - (var(--timeline-dot-size) / 2));
+  top: calc(var(--timeline-marker-center) - (var(--timeline-dot-size) / 2));
+  width: var(--timeline-dot-size);
+  height: var(--timeline-dot-size);
+  border-radius: 50%;
+  background: #000;
+  transition: left 180ms ease;
+}
+
+.timeline-item.muted::before,
+.timeline-item.muted::after {
+  background: #8c8c8c;
+}
+
+.timeline-date {
+  display: grid;
+  /* 时间和经历类型的间距：保持和右侧机构标题/描述的 10px 间距一致 */
+  gap: 10px;
+  transform: translateX(var(--timeline-item-shift));
+  transition: transform 180ms ease;
+}
+
+/* 左侧时间、Educate、Intern 字号：修改下面的 font-size */
+.timeline-date strong,
+.timeline-date span {
+  font-size: clamp(16px, 1.18vw, 22px);
+  font-weight: 900;
+}
+
+.timeline-date span {
+  line-height: 1.1;
+}
+
+.timeline-item.muted .timeline-date,
+.timeline-item.muted .timeline-detail {
+  color: var(--muted);
+}
+
+.timeline-item:hover .timeline-date,
+.timeline-item:hover .timeline-detail,
+.timeline-item:hover .timeline-detail p,
+.timeline-item:focus-visible .timeline-date,
+.timeline-item:focus-visible .timeline-detail,
+.timeline-item:focus-visible .timeline-detail p {
+  color: var(--hover-orange);
+}
+
+.timeline-detail {
+  padding-left: var(--timeline-detail-padding);
+  transform: translateX(var(--timeline-item-shift));
+  transition: transform 180ms ease;
+}
+
+/* 右侧每条经历标题字号：修改下面的 font-size */
+.timeline-detail h2 {
+  margin: 0 0 10px;
+  font-size: clamp(16px, 1.18vw, 22px);
+  font-weight: 900;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* 右侧每条经历描述字号：修改下面的 font-size */
+.timeline-detail p {
+  margin: 0;
+  color: #444;
+  font-size: clamp(15px, 1.08vw, 20px);
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.timeline-item.muted .timeline-detail p {
+  color: var(--muted);
+}
+
+.timeline-item:hover .timeline-detail p,
+.timeline-item:focus-visible .timeline-detail p {
+  color: var(--hover-orange);
+}
+
+.portrait-wrap {
+  position: relative;
+  min-height: 100%;
+}
+
+.portrait-image {
+  position: absolute;
+  right: clamp(-54px, -2vw, -18px);
+  bottom: clamp(-148px, -8vw, -84px);
+  width: min(61vw, 794px);
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.experience-preview {
+  position: absolute;
+  right: clamp(48px, 6vw, 120px);
+  top: clamp(82px, 9vw, 148px);
+  width: min(36vw, 470px);
+  color: #000;
+}
+
+.experience-preview-meta {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 20px;
+  font-size: clamp(13px, 0.95vw, 17px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.experience-preview h3 {
+  margin: 0 0 16px;
+  font-size: clamp(22px, 2.1vw, 34px);
+  line-height: 1.12;
+  font-family: var(--display-font);
+  font-weight: 900;
+}
+
+.experience-preview-role {
+  margin: 0 0 18px;
+  font-size: clamp(16px, 1.2vw, 21px);
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.experience-preview-detail {
+  margin: 0;
+  max-width: 36em;
+  color: #444;
+  font-size: clamp(14px, 1vw, 18px);
+  line-height: 1.55;
+}
+
+.experience-preview-enter-active,
+.experience-preview-leave-active {
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.experience-preview-enter-from,
+.experience-preview-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (max-width: 980px) {
+  .site-shell {
+    padding: 0;
+  }
+
+  .design-frame {
+    min-height: 100vh;
+  }
+
+  .app-header {
+    height: auto;
+    min-height: 76px;
+    padding: 18px 22px;
+    gap: 20px;
+  }
+
+  .nav-links {
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .hero-section {
+    --hero-content-left: 86px;
+    --axis-left: 48px;
+    --timeline-date-width: 104px;
+    min-height: calc(100vh - 76px);
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    padding: 72px 28px 360px var(--hero-content-left);
+  }
+
+  .axis {
+    top: 68px;
+  }
+
+  h1 {
+    font-size: clamp(46px, 15vw, 76px);
+  }
+
+  .role {
+    font-size: clamp(13px, 3.4vw, 28px);
+    margin-bottom: 42px;
+  }
+
+  .timeline-item {
+    grid-template-columns: var(--timeline-date-width) 1fr;
+  }
+
+  .timeline-item::before {
+    width: calc(var(--timeline-date-width) - var(--timeline-line-left));
+  }
+
+  .timeline-detail {
+    padding-left: 20px;
+  }
+
+  .portrait-wrap {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 430px;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .portrait-image {
+    right: 50%;
+    bottom: -170px;
+    width: min(760px, 105vw);
+    height: 430px;
+    object-fit: contain;
+    transform: translateX(50%);
+  }
+
+  .experience-preview {
+    left: 28px;
+    right: 28px;
+    top: 34px;
+    width: auto;
+  }
+
+  .experience-preview h3 {
+    font-size: clamp(24px, 8vw, 38px);
+  }
+
+}
+
+@media (max-width: 620px) {
+  .hero-section {
+    --hero-content-left: 64px;
+    --axis-left: 30px;
+    --axis-width: 5px;
+    --timeline-date-width: 84px;
+    --timeline-dot-size: 16px;
+  }
+
+  .app-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-links {
+    width: 100%;
+    font-size: 11px;
+  }
+
+  .hero-content {
+    padding: 52px 20px 330px var(--hero-content-left);
+  }
+
+  .axis {
+    width: var(--axis-width);
+  }
+
+  .axis::before {
+    left: -9px;
+    width: 24px;
+    height: 120px;
+  }
+
+  .role {
+    font-size: clamp(10px, 3.1vw, 18px);
+  }
+
+  .timeline {
+    gap: 18px;
+  }
+
+  .timeline-item {
+    grid-template-columns: var(--timeline-date-width) 1fr;
+  }
+
+  .timeline-item::before {
+    top: 17px;
+    height: 3px;
+  }
+
+  .timeline-item::after {
+    top: 10px;
+  }
+
+  .timeline-date strong,
+  .timeline-detail h2,
+  .timeline-detail p {
+    font-size: clamp(10px, 2.9vw, 12px);
+  }
+
+  .timeline-detail {
+    padding-left: 14px;
+  }
+
+  .experience-preview {
+    left: 22px;
+    right: 22px;
+  }
+
+  .experience-preview-meta {
+    margin-bottom: 12px;
+    font-size: 11px;
+  }
+
+  .experience-preview-role,
+  .experience-preview-detail {
+    font-size: 13px;
+  }
+}
