@@ -1,10 +1,9 @@
 <template>
   <section id="home" class="hero-section" aria-label="Resume home">
-    <div class="axis" aria-hidden="true"></div>
+    <SectionAxis class="hero-axis" />
 
     <div class="hero-content">
-      <h1>MURMUR</h1>
-      <p class="role">Designer / Architect / Photographer/Curator</p>
+      <HeroTitle />
       <ResumeTimeline
         :items="timelineItems"
         @item-hover="handleTimelineHover"
@@ -20,14 +19,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+/*
+ * HeroSection — 首页主区域（id="home"）
+ * 功能：编排 HeroTitle（主副标题）、ResumeTimeline（经历时间轴）、
+ *       ParticlePortrait（人像+粒子）、SectionAxis（左侧轴线），
+ *       并协调时间轴悬停 → 详情卡显示的状态（仅桌面端 ≥981px 生效）
+ * 数据：经历列表来自 src/data/timeline.js
+ */
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import ResumeTimeline from './ResumeTimeline.vue'
 import ParticlePortrait from './ParticlePortrait.vue'
+import HeroTitle from './HeroTitle.vue'
+import SectionAxis from './SectionAxis.vue'
+import { timelineItems } from '../data/timeline.js'
 
+const previewMediaQuery = '(min-width: 981px)'
 const activeTimelineItem = ref(null)
 const activePreviewTop = ref(null)
+let previewMatcher = null
+
+function canShowExperiencePreview() {
+  return typeof window !== 'undefined' && window.matchMedia(previewMediaQuery).matches
+}
 
 function handleTimelineHover({ item, previewTop }) {
+  if (!canShowExperiencePreview()) {
+    clearTimelineHover()
+    return
+  }
+
   activeTimelineItem.value = item
   activePreviewTop.value = previewTop
 }
@@ -37,58 +57,108 @@ function clearTimelineHover() {
   activePreviewTop.value = null
 }
 
-const timelineItems = [
-  {
-    date: '2024-2027',
-    type: 'Educate',
-    title: 'Southern University of Science and Technology (SUSTech)',
-    description: 'Master student in Intelligent Manufacturing and Robotics',
-    detail:
-      'Built a cross-disciplinary foundation in human-computer interaction, experimental design, robotics, kinematic control, and continuum mechanics. Published first-author work at ACM venues, contributed to international exhibitions, and developed research skills across hardware prototyping, qualitative inquiry, and quantitative analysis.',
-  },
-  {
-    date: '26.04-26.06',
-    type: 'Intern',
-    title: 'Hyper-dynamics Co., Ltd',
-    description: 'Embodied AI Product Manager Intern',
-    detail:
-      'Led product definition for a motion-capture data processing pipeline, covering one-click detection, automated repair, and fine-grained adjustment for timestamp errors, joint limits, self-collision, and ground penetration. Also supported power-industry robotics solution planning and benchmarked data platforms, simulation tools, annotation workflows, and wheel-leg robot ODM options.',
-    muted: true,
-  },
-  {
-    date: '25.12-26.03',
-    type: 'Intern',
-    title: 'Anke Innovation Technology Co., Ltd',
-    description: 'Human Factors Engineer Intern',
-    detail:
-      'Conducted long- and short-duration comfort and stability tests for sleep earphones, combining qualitative observations with quantitative measurements to locate pressure and discomfort areas. Supported ID optimization through 3D scanning, fit interference analysis, finite element workflows, and a computer-vision assisted ear measurement tool for overseas participants.',
-    muted: true,
-  },
-  {
-    date: '2019-2024',
-    type: 'Educate',
-    title: 'South-Central Minzu University (SCMZU)',
-    description: 'Bachelor of Architecture, Minor in English',
-    detail:
-      'Ranked first in the architecture program with a strong academic record, multiple scholarships, and seven university-level honors. Built a foundation in architectural design, spatial research, visual communication, and English-language communication while receiving national and provincial awards in design and computing competitions.',
-  },
-  {
-    date: '26.04-26.07',
-    type: 'Intern',
-    title: 'United Practice Architects',
-    description: 'Architectural Design Intern',
-    detail:
-      'Supported architectural concept development, design documentation, model refinement, and presentation material production. The work strengthened an end-to-end design workflow from spatial research and schematic exploration to visual communication.',
-    muted: true,
-  },
-  {
-    date: '25.12-26.03',
-    type: 'Intern',
-    title: 'Central South Architectural Design Institute',
-    description: 'Architectural Design Intern',
-    detail:
-      'Contributed to architectural drawing production, project research, design refinement, and presentation materials within a professional institute workflow. The experience connected academic architectural training with practical standards for documentation, coordination, and design delivery.',
-    muted: true,
-  },
-]
+function handlePreviewBreakpointChange(event) {
+  if (!event.matches) {
+    clearTimelineHover()
+  }
+}
+
+onMounted(() => {
+  previewMatcher = window.matchMedia(previewMediaQuery)
+  previewMatcher.addEventListener('change', handlePreviewBreakpointChange)
+})
+
+onBeforeUnmount(() => {
+  previewMatcher?.removeEventListener('change', handlePreviewBreakpointChange)
+})
 </script>
+
+<style scoped>
+.hero-section {
+  --hero-content-left: clamp(120px, 8.8vw, 800px);
+  --axis-left: clamp(60px, 7.6vw, 126px);
+  --axis-width: 6px;
+  --timeline-date-width: 124px;
+  --timeline-detail-padding: 24px;
+  /* 主副标题和经历文字左对齐：由时间列宽度 + 经历文字左边距自动计算 */
+  --hero-title-offset: calc(var(--timeline-date-width) + var(--timeline-detail-padding));
+  --hero-content-top: clamp(56px, 7vw, 112px);
+  /* 主副标题上移距离：数值越大，MURMUR 和 designer 那行越往上 */
+  --hero-title-lift: clamp(48px, 1.6vw, 76px);
+  /* 粗时间轴和主副标题顶部对齐：会跟随主副标题上移距离自动调整 */
+  --axis-top: calc(var(--hero-content-top) - var(--hero-title-lift));
+  /* 粗时间轴长度：和 MURMUR + designer 这组主副标题的高度保持接近 */
+  --axis-thick-height: clamp(88px, 7.1vw, 104px);
+  /* 经历列表整体上移距离：数值越大，经历越靠上 */
+  --timeline-lift: 36px;
+  /* 每一段经历之间的间距：数值越大，每段之间越松 */
+  --timeline-gap: 26px;
+  /* 时间轴横线粗细：数值越小，横线越细 */
+  --timeline-line-height: 2px;
+  /* 时间轴端头圆点大小：数值越小，圆点越小 */
+  --timeline-dot-size: 14px;
+  --timeline-marker-center: 20px;
+  /* 悬停经历时整体右移距离：数值越大，block 越往右，横线越长 */
+  --timeline-hover-shift: 18px;
+  --timeline-line-left: calc(var(--axis-left) + var(--axis-width) - var(--hero-content-left));
+  min-height: calc(100vh - var(--header-height));
+  display: grid;
+  grid-template-columns: minmax(560px, 0.98fr) minmax(470px, 1.02fr);
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 把 hero-section 的轴线变量映射给 SectionAxis */
+.hero-axis {
+  --section-axis-left: var(--axis-left);
+  --section-axis-top: var(--axis-top);
+  --section-axis-width: var(--axis-width);
+  --section-axis-cap-height: var(--axis-thick-height);
+}
+
+.hero-content {
+  padding: var(--hero-content-top) 0 clamp(40px, 5vw, 80px) var(--hero-content-left);
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 980px) {
+  .hero-section {
+    --hero-content-left: 86px;
+    --axis-left: 48px;
+    --timeline-date-width: 104px;
+    min-height: calc(100vh - 76px);
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    padding: 72px 28px 360px var(--hero-content-left);
+  }
+
+  .hero-axis {
+    --section-axis-top: 68px;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero-section {
+    --hero-content-left: 64px;
+    --axis-left: 30px;
+    --axis-width: 5px;
+    --timeline-date-width: 84px;
+    --timeline-dot-size: 16px;
+  }
+
+  .hero-content {
+    padding: 52px 20px 330px var(--hero-content-left);
+  }
+
+  .hero-axis {
+    --section-axis-cap-left: -9px;
+    --section-axis-cap-width: 24px;
+    --section-axis-cap-height: 120px;
+  }
+}
+</style>
