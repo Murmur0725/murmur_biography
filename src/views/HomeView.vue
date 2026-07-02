@@ -5,6 +5,7 @@
       <HeroSection />
       <AboutSection />
       <PublicationSection />
+      <ProjectsSection />
     </div>
   </main>
 </template>
@@ -14,6 +15,7 @@ import AppHeader from '../components/AppHeader.vue'
 import HeroSection from '../components/HeroSection.vue'
 import AboutSection from '../components/AboutSection.vue'
 import PublicationSection from '../components/PublicationSection.vue'
+import ProjectsSection from '../components/ProjectsSection.vue'
 </script>
 
 <style scoped>
