@@ -4,29 +4,30 @@
       <div class="project-thumbnail">
         <img
           v-if="project.thumbnail"
-          :src="project.thumbnail"
+          :src="`${baseUrl}${project.thumbnail}`"
           :alt="project.title"
           loading="lazy"
+          draggable="false"
         />
         <div v-else class="project-thumbnail-placeholder" aria-hidden="true"></div>
       </div>
 
       <div class="project-meta">
-        <span
-          class="project-direction"
-          :class="directionClass"
-        >
-          {{ project.direction }}
-        </span>
+        <h3 class="project-title">{{ project.title }}</h3>
         <span class="project-year">{{ project.year }}</span>
       </div>
 
       <div class="project-body">
-        <h3 class="project-title">{{ project.title }}</h3>
         <p class="project-description">{{ project.description }}</p>
-        <ul class="project-tags">
-          <li v-for="tag in project.tags" :key="tag" class="project-tag">{{ tag }}</li>
-        </ul>
+        <div class="project-footer">
+          <span
+            class="project-direction"
+            :class="typeClass"
+          >
+            {{ project.type }}
+          </span>
+          <span class="project-learn-more">Learn More →</span>
+        </div>
       </div>
     </a>
   </article>
@@ -35,6 +36,8 @@
 <script setup>
 import { computed } from 'vue'
 
+const baseUrl = import.meta.env.BASE_URL
+
 const props = defineProps({
   project: {
     type: Object,
@@ -42,8 +45,8 @@ const props = defineProps({
   },
 })
 
-const directionClass = computed(() =>
-  props.project.direction === 'HCI' ? 'project-direction--hci' : 'project-direction--architecture'
+const typeClass = computed(() =>
+  props.project.type === 'Research' ? 'project-direction--research' : 'project-direction--design'
 )
 </script>
 
@@ -53,9 +56,11 @@ const directionClass = computed(() =>
 }
 
 .project-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: inherit;
+  height: 100%;
 }
 
 .project-thumbnail {
@@ -86,11 +91,43 @@ const directionClass = computed(() =>
   transform: scale(1.03);
 }
 
+/* ── 标题 + 年份同行 ── */
 .project-meta {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
+}
+
+.project-title {
+  margin: 0;
+  font-size: clamp(16px, 1.18vw, 22px);
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.project-year {
+  flex: 0 0 auto;
+  font-size: clamp(13px, 0.95vw, 15px);
+  font-weight: 900;
+  color: var(--muted);
+}
+
+/* ── Tag + Learn More 末行 ── */
+.project-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: clamp(12px, 1.2vw, 16px);
 }
 
 .project-direction {
@@ -104,56 +141,36 @@ const directionClass = computed(() =>
   color: #fff;
 }
 
-.project-direction--hci {
+.project-direction--design {
   background: var(--blue);
 }
 
-.project-direction--architecture {
+.project-direction--research {
   background: var(--accent);
 }
 
-.project-year {
-  font-size: clamp(13px, 0.95vw, 15px);
-  font-weight: 900;
-  color: var(--muted);
-}
-
-.project-title {
-  margin: 0 0 10px;
-  font-family: var(--display-font);
-  font-size: clamp(18px, 1.45vw, 26px);
-  font-weight: 900;
-  line-height: 1.1;
-  transition: color 180ms ease;
-}
-
-.project-card:hover .project-title,
-.project-card:focus-visible .project-title {
-  color: var(--hover-orange);
-}
-
 .project-description {
-  margin: 0 0 14px;
+  margin: 0;
   font-size: clamp(14px, 1vw, 17px);
   line-height: 1.5;
   color: #444;
+  text-align: justify;
+  text-align-last: left;
 }
 
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.project-tag {
-  font-size: clamp(11px, 0.82vw, 13px);
-  font-weight: 700;
+/* ── Learn More ── */
+.project-learn-more {
+  font-size: clamp(12px, 0.82vw, 14px);
+  font-weight: 900;
   color: var(--muted);
-  padding: 3px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+.project-card:hover .project-learn-more,
+.project-card:focus-visible .project-learn-more {
+  color: var(--hover-orange);
 }
 </style>

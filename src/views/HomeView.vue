@@ -6,6 +6,7 @@
       <AboutSection />
       <PublicationSection />
       <ProjectsSection />
+      <GallerySection />
     </div>
   </main>
 </template>
@@ -16,6 +17,7 @@ import HeroSection from '../components/HeroSection.vue'
 import AboutSection from '../components/AboutSection.vue'
 import PublicationSection from '../components/PublicationSection.vue'
 import ProjectsSection from '../components/ProjectsSection.vue'
+import GallerySection from '../components/GallerySection.vue'
 </script>
 
 <style scoped>

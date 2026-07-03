@@ -83,6 +83,8 @@ defineProps({
   color: #444;
   font-size: clamp(15px, 1.08vw, 18px);
   line-height: 1.48;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .publication-award {

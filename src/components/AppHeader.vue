@@ -6,8 +6,21 @@
     <nav class="nav-links" aria-label="Primary navigation">
       <a href="#about">About</a>
       <a href="#publication">Publication</a>
-      <a href="#projects">Projects</a>
-      <a href="#gallery">Gallery</a>
+      <div class="nav-dropdown">
+        <a href="#projects" class="nav-dropdown-trigger">Projects</a>
+        <div class="nav-dropdown-menu">
+          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">PRODUCT</a>
+          <a v-for="p in hciProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
+          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">ARCHITECTURE</a>
+          <a v-for="p in archProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <a href="#gallery" class="nav-dropdown-trigger">Gallery</a>
+        <div class="nav-dropdown-menu">
+          <a v-for="ex in exhibitions" :key="ex.id" :href="`#gallery`" @click.prevent="scrollTo('gallery')">{{ ex.title }}</a>
+        </div>
+      </div>
     </nav>
   </header>
 </template>
@@ -18,7 +31,18 @@
  * 功能：左侧品牌 logo（点击回首页锚点 #home），右侧主导航锚点链接
  *       (About / Publication / Projects / Gallery)
  */
+import { computed } from 'vue'
 import logoImage from '../assets/images/logo-portfolio.png'
+import { exhibitions } from '../data/gallery.js'
+import { projects } from '../data/projects.js'
+
+const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI'))
+const archProjects = computed(() => projects.filter((p) => p.direction === 'Architecture'))
+
+function scrollTo(id) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 <style scoped>
@@ -62,6 +86,10 @@ import logoImage from '../assets/images/logo-portfolio.png'
   padding: 10px 0;
 }
 
+.nav-dropdown-trigger {
+  padding-bottom: 0;
+}
+
 .nav-links a::after {
   content: '';
   position: absolute;
@@ -78,6 +106,98 @@ import logoImage from '../assets/images/logo-portfolio.png'
 .nav-links a:hover::after,
 .nav-links a:focus-visible::after {
   transform: scaleX(1);
+}
+
+/* ── 下拉菜单 ── */
+.nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  padding: 10px 0;
+  background: rgba(68, 68, 68, 0.5);
+  border: 1px solid rgba(85, 85, 85, 0.5);
+  border-radius: 0;
+  border-top: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms ease;
+  z-index: 10;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown-trigger:focus-visible + .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(12px);
+}
+
+.nav-dropdown-label {
+  display: block;
+  padding: 6px 20px 4px;
+  font-size: clamp(17px, 1.25vw, 26px);
+  font-weight: 900;
+  color: #fff !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-align: left;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.nav-dropdown-menu a:not(.nav-dropdown-label) {
+  text-align: left;
+}
+
+.nav-dropdown-label:not(:first-child) {
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  padding-top: 14px;
+}
+
+.nav-dropdown-label:hover {
+  color: #fff !important;
+  background: #555 !important;
+}
+
+.nav-dropdown-menu a {
+  display: block;
+  padding: 6px 20px;
+  font-size: clamp(11px, 0.78vw, 13px);
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.nav-dropdown-menu a:hover {
+  color: #fff;
+  background: #555;
+}
+
+.nav-dropdown-menu a:not(.nav-dropdown-label)::before {
+  content: '• ';
+}
+
+.nav-dropdown-menu a:not(.nav-dropdown-label):hover::before {
+  content: '→ ';
+}
+
+.nav-dropdown-menu a::after {
+  display: none;
 }
 
 @media (max-width: 980px) {

@@ -1,30 +1,102 @@
-# Website
+# Portfolio Website
 
-Vue 3 + Vite portfolio site scaffolded for GitHub Pages.
+基于 Vue 3 + Vite 构建的个人作品集网站，部署于 GitHub Pages。
 
-## Development
+## 技术栈
+
+- **框架**：Vue 3（Composition API）
+- **构建工具**：Vite 6
+- **部署**：GitHub Actions + GitHub Pages
+- **包管理器**：npm
+
+## 项目结构
+
+```
+.
+├── .github/workflows/      # GitHub Actions 自动化部署
+├── public/                 # 静态资源
+│   └── images/             # 图片资源
+├── src/
+│   ├── assets/             # 样式、图片等会被打包处理的资源
+│   │   └── images/
+│   ├── components/         # Vue 组件
+│   │   ├── AppHeader.vue       # 顶部导航栏（含下拉菜单）
+│   │   ├── HeroSection.vue     # 首页主视觉
+│   │   ├── AboutSection.vue    # 关于我
+│   │   ├── PublicationSection.vue
+│   │   ├── ProjectsSection.vue
+│   │   ├── GallerySection.vue
+│   │   └── ...
+│   ├── data/               # 内容数据（JSON/JS 模块）
+│   │   ├── about.js
+│   │   ├── publications.js
+│   │   ├── projects.js     # 项目列表，用于导航下拉菜单
+│   │   ├── gallery.js
+│   │   └── timeline.js
+│   ├── styles/
+│   │   └── global.css      # 全局 CSS 变量与基础样式
+│   ├── views/
+│   │   └── HomeView.vue    # 页面组装入口
+│   ├── App.vue
+│   └── main.js             # 应用入口
+├── index.html
+├── vite.config.js
+├── package.json
+└── README.md
+```
+
+## 开发
 
 ```bash
+# 安装依赖
 npm install
+
+# 启动本地开发服务器
 npm run dev
 ```
 
-## Build
+开发服务器默认地址为 `http://localhost:5173/`。
+
+## 构建
 
 ```bash
 npm run build
 ```
 
-## Deploy to GitHub Pages
+构建产物输出到 `dist/` 目录。
 
-Update `base` in `vite.config.js` to match your GitHub repository name:
+## 部署
+
+### 方式一：GitHub Actions 自动部署（推荐）
+
+仓库已配置 `.github/workflows/deploy.yml`。每次向 `main` 分支推送代码时，会自动构建并部署到 GitHub Pages。
+
+### 方式二：手动部署到 gh-pages
+
+确保 `vite.config.js` 中的 `base` 与仓库名一致：
 
 ```js
-base: '/your-repo-name/'
+export default defineConfig({
+  base: '/murmur_biography/',
+})
 ```
 
-Then run:
+然后执行：
 
 ```bash
 npm run deploy
 ```
+
+该命令会先执行 `npm run build`，再通过 `gh-pages` 将 `dist/` 目录推送到 `gh-pages` 分支。
+
+## 常用内容更新
+
+- **导航栏下拉菜单项目**：修改 `src/data/projects.js` 中的 `title` 字段。
+- **导航栏分类标签 / 样式**：修改 `src/components/AppHeader.vue`。
+- **各板块内容**：分别修改 `src/data/` 下的对应数据文件。
+- **全局样式变量**：修改 `src/styles/global.css`。
+
+## 注意事项
+
+- 本项目使用 `scoped` CSS 与少量全局样式变量结合管理样式。
+- 修改 `vite.config.js` 中的 `base` 后，需要重新构建并部署才能生效。
