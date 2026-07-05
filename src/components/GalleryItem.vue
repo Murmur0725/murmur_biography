@@ -46,7 +46,7 @@
             <div class="gallery-thumb">
               <img
                 v-if="image.src"
-                :src="image.src"
+                :src="`${baseUrl}${image.src}`"
                 :alt="image.caption || show.title"
                 loading="lazy"
                 draggable="false"
@@ -169,13 +169,13 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .gallery-item {
-  padding-top: clamp(28px, 4vw, 52px);
+  padding-top: clamp(44px, 6vw, 76px);
   max-width: var(--layout-content-width);
 }
 
 .gallery-item:not(:first-child) {
   border-top: 2px solid #000;
-  margin-top: clamp(28px, 4vw, 52px);
+  margin-top: clamp(44px, 6vw, 76px);
 }
 
 .gallery-item:first-child {

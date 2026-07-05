@@ -75,8 +75,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .hero-section {
-  --hero-content-left: clamp(120px, 8.8vw, 800px);
-  --axis-left: clamp(60px, 7.6vw, 126px);
+  --hero-content-left: clamp(60px, 3.5vw, 120px);
+  --axis-left: clamp(32px, 3.5vw, 64px);
   --axis-width: 6px;
   --timeline-date-width: 124px;
   --timeline-detail-padding: 24px;
@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
   --timeline-line-height: 2px;
   /* 时间轴端头圆点大小：数值越小，圆点越小 */
   --timeline-dot-size: 14px;
-  --timeline-marker-center: 20px;
+  --timeline-marker-center: calc((clamp(16px, 1.18vw, 22px) * 1.25 + clamp(15px, 1.08vw, 20px) * 1.35 + 6px) / 2);
   /* 悬停经历时整体右移距离：数值越大，block 越往右，横线越长 */
   --timeline-hover-shift: 18px;
   --timeline-line-left: calc(var(--axis-left) + var(--axis-width) - var(--hero-content-left));

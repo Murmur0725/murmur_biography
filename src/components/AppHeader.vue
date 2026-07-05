@@ -5,7 +5,7 @@
     </a>
     <nav class="nav-links" aria-label="Primary navigation">
       <a href="#about">About</a>
-      <a href="#publication">Publication</a>
+      <a href="#publication">Publications</a>
       <div class="nav-dropdown">
         <a href="#projects" class="nav-dropdown-trigger">Projects</a>
         <div class="nav-dropdown-menu">
@@ -56,6 +56,14 @@ function scrollTo(id) {
   padding: 0 var(--header-padding-right) 0 var(--header-padding-left);
   position: relative;
   z-index: 5;
+}
+
+/* 大屏时内容居中，logo 和导航往中间靠 */
+@media (min-width: 981px) {
+  .app-header {
+    padding-left: max(var(--header-padding-left), calc((100vw - 1500px) / 2));
+    padding-right: max(var(--header-padding-right), calc((100vw - 1500px) / 2));
+  }
 }
 
 .brand {

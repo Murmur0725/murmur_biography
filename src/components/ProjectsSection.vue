@@ -10,7 +10,7 @@
       <div class="projects-categories">
         <!-- Product track -->
         <div class="project-category">
-          <h3 class="category-title">Product</h3>
+          <h3 class="category-title">HCI Systems & User Research</h3>
           <div
             ref="hciTrack"
             class="project-track"
@@ -34,6 +34,38 @@
               :style="{ width: thumbWidth.hci, left: thumbLeft.hci }"
               @pointerdown="onThumbDown($event, 'hci')"
               @pointermove="onThumbMove($event, 'hci')"
+              @pointerup="onThumbUp"
+              @pointercancel="onThumbUp"
+            ></span>
+          </div>
+        </div>
+
+        <!-- AI Agent track -->
+        <div class="project-category">
+          <h3 class="category-title">AI Agent & Embodied Intelligence</h3>
+          <div
+            ref="aiTrack"
+            class="project-track"
+            :class="{ 'is-dragging': dragging.track === 'ai' }"
+            @scroll="updateScrollbar('ai')"
+            @pointerdown="onPointerDown($event, 'ai')"
+            @pointermove="onPointerMove($event, 'ai')"
+            @pointerup="onPointerUp"
+            @pointercancel="onPointerUp"
+            @pointerleave="onPointerUp"
+          >
+            <ProjectItem
+              v-for="project in aiProjects"
+              :key="project.id"
+              :project="project"
+            />
+          </div>
+          <div v-if="overflowing.ai" class="project-scroll" aria-hidden="true">
+            <span
+              class="project-scroll-thumb"
+              :style="{ width: thumbWidth.ai, left: thumbLeft.ai }"
+              @pointerdown="onThumbDown($event, 'ai')"
+              @pointermove="onThumbMove($event, 'ai')"
               @pointerup="onThumbUp"
               @pointercancel="onThumbUp"
             ></span>
@@ -88,15 +120,17 @@ import { projects } from '../data/projects.js'
 import SectionAxis from './SectionAxis.vue'
 import ProjectItem from './ProjectItem.vue'
 
+const aiProjects = computed(() => projects.filter((p) => p.direction === 'AI Agent'))
 const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI'))
 const architectureProjects = computed(() =>
   projects.filter((p) => p.direction === 'Architecture')
 )
 
 // ── Track refs ──
+const aiTrack = ref(null)
 const hciTrack = ref(null)
 const archTrack = ref(null)
-const tracks = computed(() => ({ hci: hciTrack.value, arch: archTrack.value }))
+const tracks = computed(() => ({ ai: aiTrack.value, hci: hciTrack.value, arch: archTrack.value }))
 
 // ── 轨道拖拽 ──
 const dragging = reactive({ track: null })
@@ -125,9 +159,9 @@ function onPointerUp() {
 }
 
 // ── 自定义滚动条 ──
-const overflowing = reactive({ hci: false, arch: false })
-const thumbWidth = reactive({ hci: '0%', arch: '0%' })
-const thumbLeft = reactive({ hci: '0%', arch: '0%' })
+const overflowing = reactive({ ai: false, hci: false, arch: false })
+const thumbWidth = reactive({ ai: '0%', hci: '0%', arch: '0%' })
+const thumbLeft = reactive({ ai: '0%', hci: '0%', arch: '0%' })
 
 function updateScrollbar(key) {
   const el = tracks.value[key]
@@ -165,18 +199,20 @@ function onThumbUp() {
   thumbDrag.key = null
 }
 
-onMounted(async () => {
-  await nextTick()
+function updateAllScrollbars() {
+  updateScrollbar('ai')
   updateScrollbar('hci')
   updateScrollbar('arch')
-  window.addEventListener('resize', () => {
-    updateScrollbar('hci')
-    updateScrollbar('arch')
-  })
+}
+
+onMounted(async () => {
+  await nextTick()
+  updateAllScrollbars()
+  window.addEventListener('resize', updateAllScrollbars)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', () => {})
+  window.removeEventListener('resize', updateAllScrollbars)
 })
 </script>
 
@@ -190,7 +226,7 @@ onBeforeUnmount(() => {
 }
 
 .projects-axis {
-  --section-axis-left: calc((100vw - min(100vw, 1500px)) / 2 + var(--layout-axis-left));
+  --section-axis-left: calc((100vw - min(100vw, var(--layout-frame-width))) / 2 + var(--layout-axis-left));
   --section-axis-top: 0;
   --section-axis-width: 6px;
   --section-axis-cap-height: var(--layout-axis-thick-height);
@@ -198,7 +234,7 @@ onBeforeUnmount(() => {
 }
 
 .projects-inner {
-  width: min(1500px, 100%);
+  width: min(var(--layout-frame-width), 100%);
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -207,15 +243,18 @@ onBeforeUnmount(() => {
 .projects-heading {
   display: grid;
   grid-template-columns:
-    calc(var(--layout-content-left) + var(--layout-title-offset))
+    var(--layout-content-start)
     minmax(0, 1fr);
   gap: 0;
   align-items: end;
+  padding-right: var(--layout-content-right);
   margin-bottom: clamp(64px, 9vw, 128px);
 }
 
 .projects-heading h2 {
   grid-column: 2;
+  width: var(--layout-content-width);
+  max-width: 100%;
   margin: 0;
   font-family: var(--display-font);
   font-size: clamp(30px, 5.2vw, 58px);
@@ -227,8 +266,8 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(56px, 8vw, 96px);
-  padding-left: calc(var(--layout-content-left) + var(--layout-title-offset));
-  padding-right: clamp(28px, 4vw, 72px);
+  padding-left: var(--layout-content-start);
+  padding-right: var(--layout-content-right);
 }
 
 .project-category {
@@ -300,6 +339,7 @@ onBeforeUnmount(() => {
   .projects-heading {
     grid-template-columns: 1fr;
     gap: 14px;
+    padding-right: 0;
     margin-bottom: 40px;
   }
 

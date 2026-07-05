@@ -75,12 +75,14 @@ defineProps({
 .portrait-wrap {
   position: relative;
   min-height: 100%;
+  display: flex;
+  align-items: flex-start;
 }
 
 .portrait-stage {
   position: absolute;
   right: clamp(-16px, -0.4vw, 8px);
-  bottom: clamp(-148px, -8vw, -84px);
+  top: clamp(56px, 7vw, 112px);
   width: min(61vw, 794px);
   max-width: none;
   transform-origin: 52% 54%;

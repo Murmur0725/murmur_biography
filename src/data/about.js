@@ -26,6 +26,11 @@ export const skills = [
 
 export const awards = [
   {
+    year: '2026',
+    title:
+      "ACM DIS Companion '26 Interactivity Track — First Prize: Splash into Bubbles",
+  },
+  {
     year: '2025',
     title: 'China-US Youth Maker Competition — First Prize (Main Track)',
   },
@@ -47,6 +52,45 @@ export const awards = [
   },
 ]
 
+export const honors = [
+  {
+    year: '2025',
+    title: 'University-level Outstanding Communist Youth League Member',
+  },
+  {
+    year: '2025',
+    title: 'University-level Outstanding Graduate Student',
+  },
+  {
+    year: '2024',
+    title: 'Outstanding Graduate, Bachelor\u2019s Degree',
+  },
+  {
+    year: '2023',
+    title: 'Outstanding Student Scholarship — First Prize',
+  },
+  {
+    year: '2023',
+    title: 'Social Practice Scholarship',
+  },
+  {
+    year: '2022',
+    title: 'Outstanding Student Scholarship — Second Prize',
+  },
+  {
+    year: '2022',
+    title: 'Social Practice Scholarship',
+  },
+  {
+    year: '2022',
+    title: 'University Outstanding League Member',
+  },
+  {
+    year: '2021',
+    title: 'Outstanding Student Scholarship — First Prize',
+  },
+]
+
 export const volunteer = [
   {
     year: '2025',
@@ -59,5 +103,33 @@ export const volunteer = [
   {
     year: '2024',
     title: 'Chinese CHI 2024 — Academic Conference Volunteer',
+  },
+]
+
+// 证书图片：把图片放到 public/images/ 目录，文件名填到这里
+export const certificates = [
+  {
+    src: 'images/award4.png',
+    alt: "ACM DIS Companion '26 Interactivity Track — First Prize",
+  },
+  {
+    src: 'images/award6.png',
+    alt: 'China-US Youth Maker Competition — First Prize',
+  },
+  {
+    src: 'images/award3.jpg',
+    alt: 'Future Designer — Provincial Second Prize',
+  },
+  {
+    src: 'images/award5.png',
+    alt: 'Chinese Collegiate Computing Competition — National Second Prize',
+  },
+  {
+    src: 'images/award2.png',
+    alt: 'Future Designer — National Third Prize',
+  },
+  {
+    src: 'images/award1.png',
+    alt: 'Milan Design Week — Hubei Third Prize',
   },
 ]

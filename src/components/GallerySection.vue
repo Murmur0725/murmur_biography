@@ -40,7 +40,7 @@ import GalleryItem from './GalleryItem.vue'
 }
 
 .gallery-axis {
-  --section-axis-left: calc((100vw - min(100vw, 1500px)) / 2 + var(--layout-axis-left));
+  --section-axis-left: calc((100vw - min(100vw, var(--layout-frame-width))) / 2 + var(--layout-axis-left));
   --section-axis-top: 0;
   --section-axis-width: 6px;
   --section-axis-cap-height: var(--layout-axis-thick-height);
@@ -48,7 +48,7 @@ import GalleryItem from './GalleryItem.vue'
 }
 
 .gallery-inner {
-  width: min(1500px, 100%);
+  width: min(var(--layout-frame-width), 100%);
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -57,15 +57,18 @@ import GalleryItem from './GalleryItem.vue'
 .gallery-heading {
   display: grid;
   grid-template-columns:
-    calc(var(--layout-content-left) + var(--layout-title-offset))
+    var(--layout-content-start)
     minmax(0, 1fr);
   gap: 0;
   align-items: end;
+  padding-right: var(--layout-content-right);
   margin-bottom: clamp(64px, 9vw, 128px);
 }
 
 .gallery-heading h2 {
   grid-column: 2;
+  width: var(--layout-content-width);
+  max-width: 100%;
   margin: 0;
   font-family: var(--display-font);
   font-size: clamp(30px, 5.2vw, 58px);
@@ -78,8 +81,8 @@ import GalleryItem from './GalleryItem.vue'
   gap: 0;
   margin: 0;
   padding: 0;
-  padding-left: calc(var(--layout-content-left) + var(--layout-title-offset));
-  padding-right: clamp(28px, 4vw, 72px);
+  padding-left: var(--layout-content-start);
+  padding-right: var(--layout-content-right);
   list-style: none;
 }
 
@@ -91,6 +94,7 @@ import GalleryItem from './GalleryItem.vue'
   .gallery-heading {
     grid-template-columns: 1fr;
     gap: 14px;
+    padding-right: 0;
   }
 
   .gallery-heading h2 {

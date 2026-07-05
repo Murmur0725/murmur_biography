@@ -11,14 +11,17 @@
   --header-padding-right: clamp(56px, 7vw, 124px);
   --header-nav-width: clamp(420px, 34vw, 540px);
   /* 通用 section 布局变量：About / Publication 共用，保证对齐 */
-  --layout-content-left: clamp(120px, 8.8vw, 800px);
+  --layout-frame-width: 1500px;
+  --layout-content-left: clamp(60px, 3.5vw, 120px);
   --layout-title-offset: calc(124px + 24px);
-  --layout-axis-left: clamp(60px, 7.6vw, 126px);
+  --layout-content-start: calc(var(--layout-content-left) + var(--layout-title-offset));
+  --layout-content-right: clamp(28px, 4vw, 72px);
+  --layout-axis-left: clamp(32px, 3.5vw, 64px);
   --layout-axis-thick-left: calc(var(--layout-axis-left) - 12px);
   --layout-axis-thick-width: 30px;
   --layout-axis-thick-height: clamp(32px, 6.2vw, 56px);
   --layout-top: clamp(44px, 6vw, 84px);
-  --layout-content-width: 110ch;
+  --layout-content-width: calc(var(--layout-frame-width) - var(--layout-content-start) - var(--layout-content-right));
 }
 
 * {

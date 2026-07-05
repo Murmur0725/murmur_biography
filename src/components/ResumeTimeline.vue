@@ -70,6 +70,10 @@ function handleItemHover(item, event) {
   cursor: default;
 }
 
+.timeline-item:nth-child(4) {
+  margin-top: clamp(18px, 2.5vw, 36px);
+}
+
 .timeline-item:hover,
 .timeline-item:focus-visible {
   --timeline-item-shift: var(--timeline-hover-shift);
