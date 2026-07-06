@@ -11,7 +11,7 @@ export const highlights = [
 ]
 
 export const skills = [
-  'HCI Research',
+  'HCI DESIGN',
   'Hardware Prototyping',
   'Embodied AI',
   'Multisensory Biofeedback',

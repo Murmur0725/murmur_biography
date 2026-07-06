@@ -4,7 +4,7 @@
 
     <div class="gallery-inner">
       <div class="gallery-heading">
-        <h2 id="gallery-title">Gallery</h2>
+        <h2 id="gallery-title">Exhibitions</h2>
       </div>
 
       <ol class="gallery-list">

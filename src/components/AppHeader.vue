@@ -9,14 +9,16 @@
       <div class="nav-dropdown">
         <a href="#projects" class="nav-dropdown-trigger">Projects</a>
         <div class="nav-dropdown-menu">
-          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">PRODUCT</a>
+          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">HCI DESIGN</a>
           <a v-for="p in hciProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
+          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">AI SYSTEMS</a>
+          <a v-for="p in aiProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
           <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">ARCHITECTURE</a>
           <a v-for="p in archProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
         </div>
       </div>
       <div class="nav-dropdown">
-        <a href="#gallery" class="nav-dropdown-trigger">Gallery</a>
+        <a href="#gallery" class="nav-dropdown-trigger">Exhibitions</a>
         <div class="nav-dropdown-menu">
           <a v-for="ex in exhibitions" :key="ex.id" :href="`#gallery`" @click.prevent="scrollTo('gallery')">{{ ex.title }}</a>
         </div>
@@ -29,14 +31,15 @@
 /*
  * AppHeader — 顶部导航栏
  * 功能：左侧品牌 logo（点击回首页锚点 #home），右侧主导航锚点链接
- *       (About / Publication / Projects / Gallery)
+ *       (About / Publication / Projects / Exhibitions)
  */
 import { computed } from 'vue'
 import logoImage from '../assets/images/logo-portfolio.png'
 import { exhibitions } from '../data/gallery.js'
 import { projects } from '../data/projects.js'
 
-const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI'))
+const aiProjects = computed(() => projects.filter((p) => p.direction === 'AI Systems'))
+const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI DESIGN'))
 const archProjects = computed(() => projects.filter((p) => p.direction === 'Architecture'))
 
 function scrollTo(id) {

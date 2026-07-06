@@ -8,9 +8,9 @@
       </div>
 
       <div class="projects-categories">
-        <!-- Product track -->
+        <!-- HCI DESIGN track -->
         <div class="project-category">
-          <h3 class="category-title">HCI Systems & User Research</h3>
+          <h3 class="category-title">HCI DESIGN</h3>
           <div
             ref="hciTrack"
             class="project-track"
@@ -40,9 +40,9 @@
           </div>
         </div>
 
-        <!-- AI Agent track -->
+        <!-- AI Systems track -->
         <div class="project-category">
-          <h3 class="category-title">AI Agent & Embodied Intelligence</h3>
+          <h3 class="category-title">AI Systems</h3>
           <div
             ref="aiTrack"
             class="project-track"
@@ -120,8 +120,8 @@ import { projects } from '../data/projects.js'
 import SectionAxis from './SectionAxis.vue'
 import ProjectItem from './ProjectItem.vue'
 
-const aiProjects = computed(() => projects.filter((p) => p.direction === 'AI Agent'))
-const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI'))
+const aiProjects = computed(() => projects.filter((p) => p.direction === 'AI Systems'))
+const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI DESIGN'))
 const architectureProjects = computed(() =>
   projects.filter((p) => p.direction === 'Architecture')
 )
