@@ -24,9 +24,9 @@
             class="project-direction"
             :class="typeClass"
           >
-            {{ project.type }}
+            {{ typeLabel }}
           </span>
-          <span class="project-learn-more">Learn More →</span>
+          <span class="project-learn-more">{{ t.projects.learnMore }}</span>
         </div>
       </div>
     </a>
@@ -35,8 +35,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from '../i18n/index.js'
 
 const baseUrl = import.meta.env.BASE_URL
+const { t } = useI18n()
 
 const props = defineProps({
   project: {
@@ -47,6 +49,10 @@ const props = defineProps({
 
 const typeClass = computed(() =>
   props.project.type === 'Research' ? 'project-direction--research' : 'project-direction--design'
+)
+
+const typeLabel = computed(
+  () => t.value.projects.types[props.project.type] || props.project.type,
 )
 </script>
 

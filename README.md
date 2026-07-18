@@ -1,5 +1,50 @@
 # Portfolio Website
 
+## 前端样式参考
+
+### 组件与按钮
+
+- https://uiverse.io/elements
+- https://daisyui.com/components/
+- https://www.designprompts.dev/
+- https://cssbuttons.io/
+
+### 综合灵感
+
+- [Awwwards](https://www.awwwards.com/) — 高质量网站评选，交互和视觉都很强
+- [CSS Design Awards](https://www.cssdesignawards.com/) — 偏创意站、动效站
+- [The FWA](https://thefwa.com/) — 偏实验性、艺术向网页
+- [SiteInspire](https://www.siteinspire.com/) — 按类型筛选优秀站点
+- [Land-book](https://land-book.com/) — Landing page 合集，适合产品页审美
+
+### UI / 产品界面
+
+- [Dribbble](https://dribbble.com/) — 界面概念稿、组件审美
+- [Behance](https://www.behance.net/) — 完整项目展示，偏品牌与产品
+- [Mobbin](https://mobbin.com/) — 真实 App 截图流，偏移动端
+- [Refero](https://refero.design/) — Web/App 真实界面参考
+- [Page Flows](https://pageflows.com/) — 按流程看真实产品交互
+
+### 字体 / 排版 / 视觉细节
+
+- [Typewolf](https://www.typewolf.com/) — 字体搭配与网页排版
+- [Fontpair](https://www.fontpair.co/) — 字体组合灵感
+- [Httpster](https://httpster.net/) — 精选独立站点，审美偏干净
+
+### 组件与设计系统
+
+- [Component Gallery](https://component.gallery/) — 各家设计系统组件对比
+- [UI Patterns](https://ui-patterns.com/) — 常见交互模式
+- [SaaS Frame](https://www.saasframe.io/) — SaaS 产品页与界面参考
+
+### 动效 / 创意前端
+
+- [Codrops](https://tympanus.net/codrops/) — 创意前端 demo 与教程
+- [CodePen](https://codepen.io/) — 小实验、动效片段
+- [Lusion](https://lusion.co/) — 偏 3D / WebGL 审美（本身也是作品站）
+
+> 快速找「好看官网」可优先：Awwwards → Land-book → SiteInspire → Mobbin / Refero
+
 基于 Vue 3 + Vite 构建的个人作品集网站，部署于 GitHub Pages。
 
 ## 技术栈

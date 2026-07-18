@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline" aria-label="Education and experience timeline">
+  <div class="timeline" :aria-label="ariaLabel">
     <article
       v-for="item in items"
       :key="`${item.date}-${item.title}`"
@@ -34,6 +34,10 @@ defineProps({
   items: {
     type: Array,
     required: true,
+  },
+  ariaLabel: {
+    type: String,
+    default: 'Education and experience timeline',
   },
 })
 
@@ -109,8 +113,8 @@ function handleItemHover(item, event) {
 
 .timeline-date {
   display: grid;
-  /* 时间和经历类型的间距：保持和右侧机构标题/描述的 6px 间距一致 */
-  gap: 6px;
+  /* 时间和经历类型的间距：数值越大，字离中间横线越远 */
+  gap: 12px;
   transform: translateX(var(--timeline-item-shift));
   transition: transform 180ms ease;
 }
@@ -118,7 +122,7 @@ function handleItemHover(item, event) {
 /* 左侧时间、Educate、Intern 字号：修改下面的 font-size */
 .timeline-date strong,
 .timeline-date span {
-  font-size: clamp(16px, 1.18vw, 22px);
+  font-size: clamp(16px, 1.18vw, 20px);
   font-weight: 900;
 }
 
@@ -178,8 +182,13 @@ function handleItemHover(item, event) {
 }
 
 @media (max-width: 980px) {
+  .timeline {
+    width: 100%;
+    max-width: min(980px, calc(100% - 0px));
+  }
+
   .timeline-item {
-    grid-template-columns: var(--timeline-date-width) 1fr;
+    grid-template-columns: var(--timeline-date-width) minmax(0, 1fr);
   }
 
   .timeline-item::before {
@@ -187,36 +196,27 @@ function handleItemHover(item, event) {
   }
 
   .timeline-detail {
-    padding-left: 20px;
+    padding-left: var(--timeline-detail-padding);
+    min-width: 0;
+  }
+
+  .timeline-detail h2,
+  .timeline-detail p {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 760px) {
   .timeline {
     gap: 18px;
   }
 
-  .timeline-item {
-    grid-template-columns: var(--timeline-date-width) 1fr;
-  }
-
-  .timeline-item::before {
-    top: 17px;
-    height: 3px;
-  }
-
-  .timeline-item::after {
-    top: 10px;
-  }
-
   .timeline-date strong,
+  .timeline-date span,
   .timeline-detail h2,
   .timeline-detail p {
-    font-size: clamp(10px, 2.9vw, 12px);
-  }
-
-  .timeline-detail {
-    padding-left: 14px;
+    font-size: clamp(11px, 2.9vw, 13px);
   }
 }
 </style>

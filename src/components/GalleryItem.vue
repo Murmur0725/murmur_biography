@@ -19,7 +19,7 @@
           draggable="false"
         />
         <div v-else class="gallery-poster-placeholder" aria-hidden="true">
-          <span>A4 Poster</span>
+          <span>{{ t.gallery.posterPlaceholder }}</span>
         </div>
       </div>
 
@@ -29,7 +29,7 @@
 
         <div
           ref="track"
-          class="gallery-images"
+          class="gallery-images h-scroll-track"
           :class="{ 'is-dragging': dragging }"
           @scroll="updateScrollbar"
           @pointerdown="onPointerDown"
@@ -59,9 +59,9 @@
           </figure>
         </div>
 
-        <div v-if="overflowing" class="gallery-scroll" aria-hidden="true">
+        <div v-if="overflowing" class="gallery-scroll h-scroll-bar" aria-hidden="true">
           <span
-            class="gallery-scroll-thumb"
+            class="h-scroll-thumb"
             :style="{ width: thumbWidth, left: thumbLeft }"
             @pointerdown="onThumbDown"
             @pointermove="onThumbMove"
@@ -80,9 +80,11 @@
  * 功能：展览标题 → 时间/地点 → 描述 → 多图横向滚动轨道，整体左对齐
  * 数据：通过 props.show 传入，源数据在 src/data/gallery.js
  */
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useHorizontalScroll } from '../composables/useHorizontalScroll.js'
+import { useI18n } from '../i18n/index.js'
 
 const baseUrl = import.meta.env.BASE_URL
+const { t } = useI18n()
 
 defineProps({
   show: {
@@ -91,80 +93,20 @@ defineProps({
   },
 })
 
-// 按住拖拽横向滚动图片轨道
-const track = ref(null)
-const dragging = ref(false)
-let startX = 0
-let startScroll = 0
-
-function onPointerDown(event) {
-  const el = track.value
-  if (!el) return
-  dragging.value = true
-  startX = event.clientX
-  startScroll = el.scrollLeft
-  el.setPointerCapture?.(event.pointerId)
-}
-
-function onPointerMove(event) {
-  if (!dragging.value) return
-  track.value.scrollLeft = startScroll - (event.clientX - startX)
-}
-
-function onPointerUp() {
-  dragging.value = false
-}
-
-// 底部滑块：反映滚动位置并提示还有更多卡片
-const overflowing = ref(false)
-const thumbWidth = ref('0%')
-const thumbLeft = ref('0%')
-
-function updateScrollbar() {
-  const el = track.value
-  if (!el) return
-  const { scrollWidth, clientWidth, scrollLeft } = el
-  overflowing.value = scrollWidth - clientWidth > 1
-  if (!overflowing.value) return
-  thumbWidth.value = `${(clientWidth / scrollWidth) * 100}%`
-  thumbLeft.value = `${(scrollLeft / scrollWidth) * 100}%`
-}
-
-// 直接拖拽底部滑块滚动
-let thumbDragging = false
-let thumbStartX = 0
-let thumbStartScroll = 0
-
-function onThumbDown(event) {
-  const el = track.value
-  if (!el) return
-  thumbDragging = true
-  thumbStartX = event.clientX
-  thumbStartScroll = el.scrollLeft
-  event.target.setPointerCapture?.(event.pointerId)
-  event.stopPropagation()
-}
-
-function onThumbMove(event) {
-  if (!thumbDragging) return
-  const el = track.value
-  const ratio = el.scrollWidth / el.clientWidth
-  el.scrollLeft = thumbStartScroll + (event.clientX - thumbStartX) * ratio
-}
-
-function onThumbUp() {
-  thumbDragging = false
-}
-
-onMounted(async () => {
-  await nextTick()
-  updateScrollbar()
-  window.addEventListener('resize', updateScrollbar)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateScrollbar)
-})
+const {
+  track,
+  dragging,
+  overflowing,
+  thumbWidth,
+  thumbLeft,
+  updateScrollbar,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onThumbDown,
+  onThumbMove,
+  onThumbUp,
+} = useHorizontalScroll()
 </script>
 
 <style scoped>
@@ -274,42 +216,10 @@ onBeforeUnmount(() => {
 .gallery-images {
   display: flex;
   gap: clamp(16px, 1.8vw, 28px);
-  overflow-x: auto;
-  scrollbar-width: none;
-  cursor: grab;
-}
-
-.gallery-images.is-dragging {
-  cursor: grabbing;
-  user-select: none;
-}
-
-.gallery-images::-webkit-scrollbar {
-  display: none;
 }
 
 .gallery-scroll {
-  position: relative;
   margin-top: 16px;
-  width: 100%;
-  height: 4px;
-  border-radius: 999px;
-  background: #e6e6e6;
-}
-
-.gallery-scroll-thumb {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  min-width: 28px;
-  border-radius: 999px;
-  background: #000;
-  cursor: grab;
-  touch-action: none;
-}
-
-.gallery-scroll-thumb:active {
-  cursor: grabbing;
 }
 
 .gallery-figure {

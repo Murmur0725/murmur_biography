@@ -38,6 +38,7 @@ h1 {
   line-height: 0.95;
   position: relative;
   top: calc(-1 * var(--hero-title-lift));
+  max-width: calc(100% - var(--hero-title-offset));
 }
 
 /* 副标题 designer / researcher / ... 字号：修改下面的 font-size */
@@ -48,22 +49,29 @@ h1 {
   white-space: nowrap;
   position: relative;
   top: calc(-1 * var(--hero-title-lift));
+  max-width: calc(100% - var(--hero-title-offset));
 }
 
 @media (max-width: 980px) {
   h1 {
-    font-size: clamp(46px, 15vw, 76px);
+    font-size: clamp(40px, 9vw, 64px);
   }
 
   .role {
-    font-size: clamp(12px, 3.2vw, 25px);
+    font-size: clamp(13px, 2.4vw, 22px);
     margin-bottom: 42px;
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 760px) {
+  h1 {
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
   .role {
-    font-size: clamp(10px, 2.9vw, 17px);
+    font-size: clamp(11px, 3vw, 15px);
+    white-space: normal;
+    margin-bottom: 56px;
   }
 }
 </style>

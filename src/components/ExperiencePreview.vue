@@ -22,7 +22,7 @@
  * ExperiencePreview — 悬停经历时的详情卡
  * 功能：接收 activeItem 展示完整经历详情（日期/类型/标题/角色/描述），
  *       并按 activePreviewTop 定位到与时间轴首项对齐的位置
- * 触发：由 HeroSection 协调，桌面端 ≥981px 才显示，移动端隐藏
+ * 触发：由 HeroSection 协调，桌面端 ≥1150px 才显示，更窄时隐藏
  */
 import { computed } from 'vue'
 
@@ -55,6 +55,13 @@ const previewStyle = computed(() => {
   top: clamp(82px, 9vw, 148px);
   width: var(--header-nav-width);
   color: #000;
+}
+
+/* 宽度 >1250 时详情卡收窄到 450px；1250 及以下保持原宽 */
+@media (min-width: 1251px) {
+  .experience-preview {
+    width: 450px;
+  }
 }
 
 .experience-preview-meta {
@@ -102,30 +109,9 @@ const previewStyle = computed(() => {
   transform: translateY(8px);
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1149px) {
   .experience-preview {
     display: none;
-  }
-
-  .experience-preview h3 {
-    font-size: clamp(24px, 8vw, 38px);
-  }
-}
-
-@media (max-width: 620px) {
-  .experience-preview {
-    left: 22px;
-    right: 22px;
-  }
-
-  .experience-preview-meta {
-    margin-bottom: 12px;
-    font-size: 11px;
-  }
-
-  .experience-preview-role,
-  .experience-preview-detail {
-    font-size: 13px;
   }
 }
 </style>

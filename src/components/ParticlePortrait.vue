@@ -51,14 +51,6 @@ import portraitImage from '../assets/images/particle-portrait.png'
 import hoverPortraitImage from '../assets/images/portrait-hover.png'
 import ExperiencePreview from './ExperiencePreview.vue'
 
-// 鼠标悬停人像时显现的诗句（William Blake - Auguries of Innocence）
-const poemLines = [
-  'To see a world in a grain of sand,',
-  'And a heaven in a wild flower,',
-  'Hold infinity in the palm of your hand,',
-  'And eternity in an hour.',
-]
-
 defineProps({
   activeItem: {
     type: Object,
@@ -67,6 +59,10 @@ defineProps({
   activePreviewTop: {
     type: Number,
     default: null,
+  },
+  poemLines: {
+    type: Array,
+    default: () => [],
   },
 })
 </script>
@@ -203,32 +199,7 @@ defineProps({
 
 @media (max-width: 980px) {
   .portrait-wrap {
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 430px;
-    opacity: 0.9;
-  }
-
-  .poem-overlay {
-    right: 22px;
-    left: 22px;
-    width: auto;
-  }
-
-  .portrait-stage {
-    right: 50%;
-    bottom: -170px;
-    width: min(760px, 105vw);
-    transform: translateX(50%);
-  }
-
-  .portrait-image {
-    height: 430px;
-    object-fit: contain;
-  }
-
-  .poem-line {
-    font-size: clamp(11px, 2.6vw, 16px);
+    display: none;
   }
 }
 </style>

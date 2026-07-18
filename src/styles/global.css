@@ -5,7 +5,10 @@
   --accent: #9e6e5d;
   --hover-orange: #f28a2e;
   --blue: #233b45;
-  --display-font: Georgia, 'Times New Roman', serif;
+  /* 英文保留 Georgia / Arial；中文统一走 Noto Sans SC（及系统回退） */
+  --cjk-font: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --display-font: Georgia, 'Times New Roman', var(--cjk-font);
+  --body-font: Arial, Helvetica, var(--cjk-font);
   --header-height: 64px;
   --header-padding-left: clamp(28px, 4vw, 72px);
   --header-padding-right: clamp(56px, 7vw, 124px);
@@ -37,10 +40,143 @@ body {
   min-height: 100vh;
   background: var(--paper);
   color: var(--ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--body-font);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ── 共享 section 壳层（About / Publication / Projects / Gallery）── */
+.section-shell {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  padding: var(--layout-top) 0 clamp(80px, 9vw, 132px);
+  position: relative;
+}
+
+.layout-axis {
+  --section-axis-left: calc((100vw - min(100vw, var(--layout-frame-width))) / 2 + var(--layout-axis-left));
+  --section-axis-top: 0;
+  --section-axis-width: 6px;
+  --section-axis-cap-height: var(--layout-axis-thick-height);
+  --section-axis-cap-top: var(--layout-top);
+}
+
+.section-inner {
+  width: min(var(--layout-frame-width), 100%);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns:
+    var(--layout-content-start)
+    minmax(0, 1fr);
+  gap: 0;
+  align-items: end;
+  padding-right: var(--layout-content-right);
+  margin-bottom: clamp(64px, 9vw, 128px);
+}
+
+.section-heading--compact {
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.section-heading h2 {
+  grid-column: 2;
+  width: var(--layout-content-width);
+  max-width: 100%;
+  margin: 0;
+  font-family: var(--display-font);
+  font-size: clamp(30px, 5.2vw, 58px);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.section-content {
+  padding-left: var(--layout-content-start);
+  padding-right: var(--layout-content-right);
+}
+
+@media (max-width: 760px) {
+  :root {
+    --layout-axis-left: 22px;
+    --layout-content-left: 52px;
+    --layout-content-right: 22px;
+    --layout-axis-thick-left: calc(var(--layout-axis-left) - 9px);
+    --layout-axis-thick-width: 24px;
+  }
+
+  /* 左侧留出轴线空间，避免标题/正文与时间轴粗块重叠 */
+  .section-shell {
+    padding: 56px var(--layout-content-right) 72px var(--layout-content-left);
+  }
+
+  .layout-axis {
+    --section-axis-left: var(--layout-axis-left);
+    /* cap 相对细线偏移，不是页面绝对坐标 */
+    --section-axis-cap-left: -9px;
+    --section-axis-cap-width: 24px;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding-right: 0;
+  }
+
+  .section-heading h2 {
+    grid-column: auto;
+    justify-self: start;
+  }
+
+  .section-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* ── 共享横向滚动轨道 + 自定义滚动条 ── */
+.h-scroll-track {
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.h-scroll-track.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.h-scroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+.h-scroll-bar {
+  position: relative;
+  margin-top: 4px;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: #e6e6e6;
+}
+
+.h-scroll-thumb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  min-width: 28px;
+  border-radius: 999px;
+  background: #000;
+  cursor: grab;
+  touch-action: none;
+}
+
+.h-scroll-thumb:active {
+  cursor: grabbing;
 }

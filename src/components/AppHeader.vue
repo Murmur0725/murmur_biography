@@ -1,46 +1,97 @@
 <template>
   <header class="app-header">
-    <a class="brand" href="#home" aria-label="Portfolio home">
-      <img class="brand-logo" :src="logoImage" alt="Portfolio">
-    </a>
-    <nav class="nav-links" aria-label="Primary navigation">
-      <a href="#about">About</a>
-      <a href="#publication">Publications</a>
-      <div class="nav-dropdown">
-        <a href="#projects" class="nav-dropdown-trigger">Projects</a>
-        <div class="nav-dropdown-menu">
-          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">HCI DESIGN</a>
-          <a v-for="p in hciProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
-          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">AI SYSTEMS</a>
-          <a v-for="p in aiProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
-          <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">ARCHITECTURE</a>
-          <a v-for="p in archProjects" :key="p.id" href="#projects" @click.prevent="scrollTo('projects')">{{ p.title }}</a>
+    <div class="header-left">
+      <a class="brand" href="#home" :aria-label="t.nav.homeAria">
+        <img class="brand-logo" :src="logoImage" alt="Portfolio">
+      </a>
+      <button
+        type="button"
+        class="lang-toggle"
+        :aria-label="t.nav.langSwitchAria"
+        @click="toggleLocale"
+      >
+        <span class="lang-toggle__track" aria-hidden="true">
+          <span
+            class="lang-toggle__option"
+            :class="{ 'is-active': isEn }"
+          >EN</span>
+          <span
+            class="lang-toggle__option"
+            :class="{ 'is-active': isZh }"
+          >中</span>
+        </span>
+      </button>
+    </div>
+    <div class="header-right">
+      <nav class="nav-links" :aria-label="t.nav.primaryAria">
+        <a href="#about">{{ t.nav.about }}</a>
+        <a href="#publication">{{ t.nav.publications }}</a>
+        <div class="nav-dropdown">
+          <a href="#projects" class="nav-dropdown-trigger">{{ t.nav.projects }}</a>
+          <div class="nav-dropdown-menu">
+            <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">
+              {{ t.projects.categories['HCI DESIGN'] }}
+            </a>
+            <a
+              v-for="p in hciProjects"
+              :key="p.id"
+              href="#projects"
+              @click.prevent="scrollTo('projects')"
+            >{{ p.title }}</a>
+            <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">
+              {{ t.projects.categories['AI Systems'] }}
+            </a>
+            <a
+              v-for="p in aiProjects"
+              :key="p.id"
+              href="#projects"
+              @click.prevent="scrollTo('projects')"
+            >{{ p.title }}</a>
+            <a class="nav-dropdown-label" href="#projects" @click.prevent="scrollTo('projects')">
+              {{ t.projects.categories.Architecture }}
+            </a>
+            <a
+              v-for="p in architectureProjects"
+              :key="p.id"
+              href="#projects"
+              @click.prevent="scrollTo('projects')"
+            >{{ p.title }}</a>
+          </div>
         </div>
-      </div>
-      <div class="nav-dropdown">
-        <a href="#gallery" class="nav-dropdown-trigger">Exhibitions</a>
-        <div class="nav-dropdown-menu">
-          <a v-for="ex in exhibitions" :key="ex.id" :href="`#gallery`" @click.prevent="scrollTo('gallery')">{{ ex.title }}</a>
+        <div class="nav-dropdown">
+          <a href="#gallery" class="nav-dropdown-trigger">{{ t.nav.exhibitions }}</a>
+          <div class="nav-dropdown-menu">
+            <a
+              v-for="ex in exhibitions"
+              :key="ex.id"
+              href="#gallery"
+              @click.prevent="scrollTo('gallery')"
+            >{{ ex.title }}</a>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </header>
 </template>
 
 <script setup>
 /*
  * AppHeader — 顶部导航栏
- * 功能：左侧品牌 logo（点击回首页锚点 #home），右侧主导航锚点链接
- *       (About / Publication / Projects / Exhibitions)
+ * 功能：品牌 logo、语言切换、主导航锚点
  */
-import { computed } from 'vue'
 import logoImage from '../assets/images/logo-portfolio.png'
-import { exhibitions } from '../data/gallery.js'
-import { projects } from '../data/projects.js'
+import { useI18n } from '../i18n/index.js'
 
-const aiProjects = computed(() => projects.filter((p) => p.direction === 'AI Systems'))
-const hciProjects = computed(() => projects.filter((p) => p.direction === 'HCI DESIGN'))
-const archProjects = computed(() => projects.filter((p) => p.direction === 'Architecture'))
+const {
+  t,
+  isEn,
+  isZh,
+  toggleLocale,
+  exhibitions,
+  hciProjects,
+  aiProjects,
+  architectureProjects,
+} = useI18n()
 
 function scrollTo(id) {
   const el = document.getElementById(id)
@@ -59,14 +110,22 @@ function scrollTo(id) {
   padding: 0 var(--header-padding-right) 0 var(--header-padding-left);
   position: relative;
   z-index: 5;
+  gap: 20px;
 }
 
-/* 大屏时内容居中，logo 和导航往中间靠 */
 @media (min-width: 981px) {
   .app-header {
     padding-left: max(var(--header-padding-left), calc((100vw - 1500px) / 2));
     padding-right: max(var(--header-padding-right), calc((100vw - 1500px) / 2));
   }
+}
+
+.header-left {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 20px);
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .brand {
@@ -79,6 +138,66 @@ function scrollTo(id) {
   display: block;
   width: clamp(135px, 11.25vw, 198px);
   height: auto;
+}
+
+.lang-toggle {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+}
+
+.lang-toggle__track {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-width: 72px;
+  padding: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  background: transparent;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.lang-toggle:hover .lang-toggle__track,
+.lang-toggle:focus-visible .lang-toggle__track {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.lang-toggle:focus-visible {
+  outline: none;
+}
+
+.lang-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.lang-toggle__option.is-active {
+  color: #000;
+  background: #fff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 28px);
+  min-width: 0;
 }
 
 .nav-links {
@@ -119,7 +238,6 @@ function scrollTo(id) {
   transform: scaleX(1);
 }
 
-/* ── 下拉菜单 ── */
 .nav-dropdown {
   position: relative;
   display: flex;
@@ -187,7 +305,6 @@ function scrollTo(id) {
   font-size: clamp(11px, 0.78vw, 13px);
   font-weight: 700;
   color: #fff;
-  text-transform: uppercase;
   text-transform: none;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -233,8 +350,18 @@ function scrollTo(id) {
     flex-direction: column;
   }
 
-  .nav-links {
+  .header-left {
     width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .nav-links {
+    width: auto;
+    flex: 1 1 auto;
     font-size: 11px;
   }
 }

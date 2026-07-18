@@ -1,18 +1,18 @@
 <template>
-  <section id="about" class="about-section" aria-labelledby="about-title">
-    <SectionAxis class="about-axis" />
+  <section id="about" class="section-shell" aria-labelledby="about-title">
+    <SectionAxis class="layout-axis" />
 
-    <div class="about-inner">
-      <div class="about-heading">
-        <h2 id="about-title">About</h2>
+    <div class="section-inner">
+      <div class="section-heading section-heading--compact">
+        <h2 id="about-title">{{ t.about.title }}</h2>
       </div>
 
       <div class="about-body">
-        <p class="about-bio">{{ bio }}</p>
+        <p class="about-bio">{{ about.bio }}</p>
 
         <div class="about-highlights">
           <div
-            v-for="item in highlights"
+            v-for="item in about.highlights"
             :key="item.label"
             class="about-highlight"
           >
@@ -23,19 +23,19 @@
 
         <ul class="about-skills">
           <li
-            v-for="skill in skills"
+            v-for="skill in about.skills"
             :key="skill"
             class="about-skill"
           >{{ skill }}</li>
         </ul>
       </div>
 
-      <div class="about-columns">
+      <div class="about-columns section-content">
         <div class="about-subsection">
-          <h3 class="about-subtitle">Awards</h3>
+          <h3 class="about-subtitle">{{ t.about.awards }}</h3>
           <ul class="about-list">
             <li
-              v-for="item in awards"
+              v-for="item in about.awards"
               :key="item.title"
               class="about-list-item"
             >
@@ -45,18 +45,18 @@
           </ul>
 
           <div
-            ref="certificateTrack"
-            class="certificate-scroller"
-            :class="{ 'is-dragging': certificateDragging }"
-            @scroll="updateCertificateScrollbar"
-            @pointerdown="onCertificatePointerDown"
-            @pointermove="onCertificatePointerMove"
-            @pointerup="onCertificatePointerUp"
-            @pointercancel="onCertificatePointerUp"
-            @pointerleave="onCertificatePointerUp"
+            ref="track"
+            class="certificate-scroller h-scroll-track"
+            :class="{ 'is-dragging': dragging }"
+            @scroll="updateScrollbar"
+            @pointerdown="onPointerDown"
+            @pointermove="onPointerMove"
+            @pointerup="onPointerUp"
+            @pointercancel="onPointerUp"
+            @pointerleave="onPointerUp"
           >
             <figure
-              v-for="cert in certificates"
+              v-for="cert in about.certificates"
               :key="cert.src"
               class="certificate-card"
             >
@@ -69,23 +69,23 @@
               >
             </figure>
           </div>
-          <div v-if="certificateOverflowing" class="certificate-scroll" aria-hidden="true">
+          <div v-if="overflowing" class="certificate-scroll h-scroll-bar" aria-hidden="true">
             <span
-              class="certificate-scroll-thumb"
-              :style="{ width: certificateThumbWidth, left: certificateThumbLeft }"
-              @pointerdown="onCertificateThumbDown"
-              @pointermove="onCertificateThumbMove"
-              @pointerup="onCertificateThumbUp"
-              @pointercancel="onCertificateThumbUp"
+              class="h-scroll-thumb"
+              :style="{ width: thumbWidth, left: thumbLeft }"
+              @pointerdown="onThumbDown"
+              @pointermove="onThumbMove"
+              @pointerup="onThumbUp"
+              @pointercancel="onThumbUp"
             ></span>
           </div>
         </div>
 
         <div class="about-subsection">
-          <h3 class="about-subtitle">Honors</h3>
+          <h3 class="about-subtitle">{{ t.about.honors }}</h3>
           <ul class="about-list">
             <li
-              v-for="item in honors"
+              v-for="item in about.honors"
               :key="`${item.year}-${item.title}`"
               class="about-list-item"
             >
@@ -96,10 +96,10 @@
         </div>
 
         <div class="about-subsection">
-          <h3 class="about-subtitle">Volunteer</h3>
+          <h3 class="about-subtitle">{{ t.about.volunteer }}</h3>
           <ul class="about-list">
             <li
-              v-for="item in volunteer"
+              v-for="item in about.volunteer"
               :key="item.title"
               class="about-list-item"
             >
@@ -120,138 +120,31 @@
  *       获奖荣誉列表、志愿服务列表
  * 数据：全部来自 src/data/about.js
  */
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { bio, highlights, skills, awards, honors, volunteer, certificates } from '../data/about.js'
+import { useHorizontalScroll } from '../composables/useHorizontalScroll.js'
+import { useI18n } from '../i18n/index.js'
 import SectionAxis from './SectionAxis.vue'
 
 const baseUrl = import.meta.env.BASE_URL
-const certificateTrack = ref(null)
-const certificateDragging = ref(false)
-const certificateOverflowing = ref(false)
-const certificateThumbWidth = ref('0%')
-const certificateThumbLeft = ref('0%')
+const { t, about } = useI18n()
 
-let certificateDragStartX = 0
-let certificateDragStartScroll = 0
-let certificateThumbDragging = false
-let certificateThumbStartX = 0
-let certificateThumbStartScroll = 0
-
-function updateCertificateScrollbar() {
-  const el = certificateTrack.value
-  if (!el) return
-
-  const { scrollWidth, clientWidth, scrollLeft } = el
-  certificateOverflowing.value = scrollWidth - clientWidth > 1
-  if (!certificateOverflowing.value) return
-
-  certificateThumbWidth.value = `${(clientWidth / scrollWidth) * 100}%`
-  certificateThumbLeft.value = `${(scrollLeft / scrollWidth) * 100}%`
-}
-
-function onCertificatePointerDown(event) {
-  const el = certificateTrack.value
-  if (!el) return
-
-  certificateDragging.value = true
-  certificateDragStartX = event.clientX
-  certificateDragStartScroll = el.scrollLeft
-  el.setPointerCapture?.(event.pointerId)
-}
-
-function onCertificatePointerMove(event) {
-  const el = certificateTrack.value
-  if (!el || !certificateDragging.value) return
-
-  el.scrollLeft = certificateDragStartScroll - (event.clientX - certificateDragStartX)
-}
-
-function onCertificatePointerUp() {
-  certificateDragging.value = false
-}
-
-function onCertificateThumbDown(event) {
-  const el = certificateTrack.value
-  if (!el) return
-
-  certificateThumbDragging = true
-  certificateThumbStartX = event.clientX
-  certificateThumbStartScroll = el.scrollLeft
-  event.target.setPointerCapture?.(event.pointerId)
-  event.stopPropagation()
-}
-
-function onCertificateThumbMove(event) {
-  const el = certificateTrack.value
-  if (!el || !certificateThumbDragging) return
-
-  const ratio = el.scrollWidth / el.clientWidth
-  el.scrollLeft = certificateThumbStartScroll + (event.clientX - certificateThumbStartX) * ratio
-}
-
-function onCertificateThumbUp() {
-  certificateThumbDragging = false
-}
-
-onMounted(async () => {
-  await nextTick()
-  updateCertificateScrollbar()
-  window.addEventListener('resize', updateCertificateScrollbar)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateCertificateScrollbar)
-})
+const {
+  track,
+  dragging,
+  overflowing,
+  thumbWidth,
+  thumbLeft,
+  updateScrollbar,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onThumbDown,
+  onThumbMove,
+  onThumbUp,
+} = useHorizontalScroll()
 </script>
 
 <style scoped>
-.about-section {
-  min-height: 100vh;
-  background: var(--paper);
-  color: var(--ink);
-  padding: var(--layout-top) 0 clamp(80px, 9vw, 132px);
-  position: relative;
-}
-
-.about-axis {
-  --section-axis-left: calc((100vw - min(100vw, var(--layout-frame-width))) / 2 + var(--layout-axis-left));
-  --section-axis-top: 0;
-  --section-axis-width: 6px;
-  --section-axis-cap-height: var(--layout-axis-thick-height);
-  --section-axis-cap-top: var(--layout-top);
-}
-
-.about-inner {
-  width: min(var(--layout-frame-width), 100%);
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.about-heading {
-  display: grid;
-  grid-template-columns:
-    var(--layout-content-start)
-    minmax(0, 1fr);
-  gap: 0;
-  align-items: end;
-  padding-right: var(--layout-content-right);
-  margin-bottom: clamp(36px, 5vw, 64px);
-}
-
-.about-heading h2 {
-  grid-column: 2;
-  width: var(--layout-content-width);
-  max-width: 100%;
-  margin: 0;
-  font-family: var(--display-font);
-  font-size: clamp(30px, 5.2vw, 58px);
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-
 .about-body {
-  grid-column: 2;
   display: grid;
   grid-template-columns:
     var(--layout-content-start)
@@ -321,22 +214,12 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.about-columns {
-  padding-left: var(--layout-content-start);
-  padding-right: var(--layout-content-right);
-}
-
 .about-subsection {
   margin-bottom: clamp(56px, 7vw, 96px);
 }
 
 .about-subsection:last-child {
   margin-bottom: 0;
-}
-
-.about-subsection,
-.about-subsection:last-child {
-  grid-column: auto;
 }
 
 .about-subtitle {
@@ -383,21 +266,11 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 760px) {
-  .about-section {
-    padding: 56px 22px 72px;
-  }
-
-  .about-heading,
   .about-body,
   .about-columns {
     grid-template-columns: 1fr;
     gap: 14px;
     padding-right: 0;
-  }
-
-  .about-heading h2 {
-    grid-column: auto;
-    justify-self: start;
   }
 
   .about-body,
@@ -407,67 +280,23 @@ onBeforeUnmount(() => {
     grid-column: auto;
   }
 
-  .about-subsection,
-  .about-subsection:last-child {
-    grid-column: auto;
-  }
-
-  .about-columns {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   .about-highlights {
     gap: 24px;
   }
 }
 
-/* ── 证书横向滚动（直接在 Awards 下方）── */
 .certificate-scroller {
   display: flex;
   gap: clamp(24px, 3vw, 40px);
-  overflow-x: auto;
   margin-top: clamp(36px, 4vw, 56px);
   padding: 4px 4px 12px;
   scroll-snap-type: x mandatory;
-  scrollbar-width: none;
   max-width: var(--layout-content-width);
   width: 100%;
-  cursor: grab;
-}
-
-.certificate-scroller.is-dragging {
-  cursor: grabbing;
-  user-select: none;
-}
-
-.certificate-scroller::-webkit-scrollbar {
-  display: none;
 }
 
 .certificate-scroll {
-  position: relative;
-  margin-top: 4px;
-  width: 100%;
   max-width: var(--layout-content-width);
-  height: 4px;
-  border-radius: 999px;
-  background: #e6e6e6;
-}
-
-.certificate-scroll-thumb {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  min-width: 28px;
-  border-radius: 999px;
-  background: #000;
-  cursor: grab;
-  touch-action: none;
-}
-
-.certificate-scroll-thumb:active {
-  cursor: grabbing;
 }
 
 .certificate-card {
@@ -487,11 +316,5 @@ onBeforeUnmount(() => {
 
 .certificate-card:hover img {
   transform: scale(1.03);
-}
-
-@media (max-width: 760px) {
-  .about-certificates {
-    padding-left: 0;
-  }
 }
 </style>

@@ -1,0 +1,116 @@
+export const messages = {
+  en: {
+    nav: {
+      about: 'About',
+      publications: 'Publications',
+      projects: 'Projects',
+      exhibitions: 'Exhibitions',
+      homeAria: 'Portfolio home',
+      primaryAria: 'Primary navigation',
+      langSwitch: '中文',
+      langSwitchAria: 'Switch to Chinese',
+    },
+    hero: {
+      title: 'MURMUR',
+      role: 'HCI Designer/Architect /Curator',
+      sectionAria: 'Resume home',
+      timelineAria: 'Education and experience timeline',
+    },
+    about: {
+      title: 'About',
+      awards: 'Awards',
+      honors: 'Honors',
+      volunteer: 'Volunteer',
+    },
+    publications: {
+      title: 'Publications',
+    },
+    projects: {
+      title: 'Projects',
+      learnMore: 'Learn More →',
+      categories: {
+        'HCI DESIGN': 'HCI DESIGN',
+        'AI Systems': 'AI Systems',
+        Architecture: 'Architecture',
+      },
+      types: {
+        Research: 'Research',
+        Design: 'Design',
+        Development: 'Development',
+        Product: 'Product',
+        Robotics: 'Robotics',
+        'Urban Design': 'Urban Design',
+        Planning: 'Planning',
+        'Building Design': 'Building Design',
+        'Conceptual Design': 'Conceptual Design',
+      },
+    },
+    gallery: {
+      title: 'Exhibitions',
+      posterPlaceholder: 'A4 Poster',
+    },
+    poem: [
+      'To see a world in a grain of sand,',
+      'And a heaven in a wild flower,',
+      'Hold infinity in the palm of your hand,',
+      'And eternity in an hour.',
+    ],
+  },
+  zh: {
+    nav: {
+      about: '个人简介',
+      publications: '论文发表',
+      projects: '项目展示',
+      exhibitions: '展览经历',
+      homeAria: '作品集首页',
+      primaryAria: '主导航',
+      langSwitch: 'EN',
+      langSwitchAria: '切换为英文',
+    },
+    hero: {
+      title: '邱婵',
+      role: 'HCI 设计师 / 建筑师 / 策展人',
+      sectionAria: '个人主页',
+      timelineAria: '教育与经历时间轴',
+    },
+    about: {
+      title: '个人简介',
+      awards: '竞赛获奖',
+      honors: '个人荣誉',
+      volunteer: '志愿经历',
+    },
+    publications: {
+      title: '论文发表',
+    },
+    projects: {
+      title: '项目展示',
+      learnMore: '了解更多 →',
+      categories: {
+        'HCI DESIGN': 'HCI 设计',
+        'AI Systems': 'AI 系统',
+        Architecture: '建筑',
+      },
+      types: {
+        Research: '研究',
+        Design: '设计',
+        Development: '开发',
+        Product: '产品',
+        Robotics: '机器人',
+        'Urban Design': '城市设计',
+        Planning: '规划',
+        'Building Design': '单体设计',
+        'Conceptual Design': '概念设计',
+      },
+    },
+    gallery: {
+      title: '展览经历',
+      posterPlaceholder: 'A4 海报',
+    },
+    poem: [
+      '一沙一世界，',
+      '一花一天堂，',
+      '手心握无限，',
+      '片刻即永恒。',
+    ],
+  },
+}

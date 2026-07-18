@@ -1,11 +1,12 @@
 <template>
-  <section id="home" class="hero-section" aria-label="Resume home">
+  <section id="home" class="hero-section" :aria-label="t.hero.sectionAria">
     <SectionAxis class="hero-axis" />
 
     <div class="hero-content">
-      <HeroTitle />
+      <HeroTitle :title="t.hero.title" :role="t.hero.role" />
       <ResumeTimeline
         :items="timelineItems"
+        :aria-label="t.hero.timelineAria"
         @item-hover="handleTimelineHover"
         @item-leave="clearTimelineHover"
       />
@@ -14,6 +15,7 @@
     <ParticlePortrait
       :active-item="activeTimelineItem"
       :active-preview-top="activePreviewTop"
+      :poem-lines="poemLines"
     />
   </section>
 </template>
@@ -21,19 +23,20 @@
 <script setup>
 /*
  * HeroSection — 首页主区域（id="home"）
- * 功能：编排 HeroTitle（主副标题）、ResumeTimeline（经历时间轴）、
- *       ParticlePortrait（人像+粒子）、SectionAxis（左侧轴线），
- *       并协调时间轴悬停 → 详情卡显示的状态（仅桌面端 ≥981px 生效）
- * 数据：经历列表来自 src/data/timeline.js
  */
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import ResumeTimeline from './ResumeTimeline.vue'
 import ParticlePortrait from './ParticlePortrait.vue'
 import HeroTitle from './HeroTitle.vue'
 import SectionAxis from './SectionAxis.vue'
-import { timelineItems } from '../data/timeline.js'
+import { useI18n } from '../i18n/index.js'
+import { messages } from '../i18n/messages.js'
 
-const previewMediaQuery = '(min-width: 981px)'
+const { t, timelineItems } = useI18n()
+/** 人像悬停诗句固定英文，不随语言切换 */
+const poemLines = messages.en.poem
+
+const previewMediaQuery = '(min-width: 1150px)'
 const activeTimelineItem = ref(null)
 const activePreviewTop = ref(null)
 let previewMatcher = null
@@ -75,8 +78,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .hero-section {
-  --hero-content-left: clamp(60px, 3.5vw, 120px);
-  --axis-left: clamp(32px, 3.5vw, 64px);
+  --hero-content-left: var(--layout-content-left);
+  --axis-left: var(--layout-axis-left);
   --axis-width: 6px;
   --timeline-date-width: 124px;
   --timeline-detail-padding: 24px;
@@ -97,13 +100,13 @@ onBeforeUnmount(() => {
   --timeline-line-height: 2px;
   /* 时间轴端头圆点大小：数值越小，圆点越小 */
   --timeline-dot-size: 14px;
-  --timeline-marker-center: calc((clamp(16px, 1.18vw, 22px) * 1.25 + clamp(15px, 1.08vw, 20px) * 1.35 + 6px) / 2);
+  --timeline-marker-center: calc((clamp(16px, 1.18vw, 22px) * 1.25 + clamp(15px, 1.08vw, 20px) * 1.35 + 12px) / 2);
   /* 悬停经历时整体右移距离：数值越大，block 越往右，横线越长 */
   --timeline-hover-shift: 18px;
   --timeline-line-left: calc(var(--axis-left) + var(--axis-width) - var(--hero-content-left));
   min-height: calc(100vh - var(--header-height));
   display: grid;
-  grid-template-columns: minmax(560px, 0.98fr) minmax(470px, 1.02fr);
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
   width: min(100%, 1500px);
   margin: 0 auto;
   position: relative;
@@ -116,25 +119,27 @@ onBeforeUnmount(() => {
   --section-axis-top: var(--axis-top);
   --section-axis-width: var(--axis-width);
   --section-axis-cap-height: var(--axis-thick-height);
+  /* cap 相对细轴线定位：默认 -12px / 30px，让粗块居中压在细线上 */
 }
 
 .hero-content {
   padding: var(--hero-content-top) 0 clamp(40px, 5vw, 80px) var(--hero-content-left);
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
 
 @media (max-width: 980px) {
   .hero-section {
-    --hero-content-left: 86px;
-    --axis-left: 48px;
+    /* 轴线/左缘继续用 --layout-*，与 About 等 section 保持同一条竖线 */
     --timeline-date-width: 104px;
+    --hero-title-offset: calc(var(--timeline-date-width) + var(--timeline-detail-padding));
     min-height: calc(100vh - 76px);
     grid-template-columns: 1fr;
   }
 
   .hero-content {
-    padding: 72px 28px 360px var(--hero-content-left);
+    padding: 72px var(--layout-content-right) clamp(40px, 5vw, 80px) var(--hero-content-left);
   }
 
   .hero-axis {
@@ -142,23 +147,29 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 760px) {
   .hero-section {
-    --hero-content-left: 64px;
-    --axis-left: 30px;
-    --axis-width: 5px;
     --timeline-date-width: 84px;
-    --timeline-dot-size: 16px;
+    --timeline-detail-padding: 14px;
+    --hero-title-offset: calc(var(--timeline-date-width) + var(--timeline-detail-padding));
+    --axis-width: 5px;
+    --timeline-dot-size: 12px;
+    --axis-thick-height: 100px;
+    /* 字变小后减少上移，并加大顶部留白 */
+    --hero-title-lift: 8px;
+    --hero-content-top: 72px;
+    /* 减小经历上移，拉开与名字的间距 */
+    --timeline-lift: 8px;
   }
 
   .hero-content {
-    padding: 52px 20px 330px var(--hero-content-left);
+    padding: var(--hero-content-top) var(--layout-content-right) clamp(40px, 5vw, 80px) var(--hero-content-left);
   }
 
   .hero-axis {
+    --section-axis-top: calc(var(--hero-content-top) - var(--hero-title-lift));
     --section-axis-cap-left: -9px;
     --section-axis-cap-width: 24px;
-    --section-axis-cap-height: 120px;
   }
 }
 </style>
